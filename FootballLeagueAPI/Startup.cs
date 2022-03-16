@@ -8,6 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FootballLeagueAPI.DataContext;
+using FootballLeagueAPI.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace FootballLeagueAPI
 {
@@ -23,6 +26,12 @@ namespace FootballLeagueAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContextPool<LeagueContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("LeagueWebAPI"));
+            });
+            services.AddScoped<ITeamService, TeamService>();
+            services.AddScoped<IPlayersService, PlayerService>();
             services.AddRazorPages();
         }
 
@@ -49,7 +58,7 @@ namespace FootballLeagueAPI
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
         }
     }

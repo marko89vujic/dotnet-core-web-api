@@ -3,11 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FootballLeagueAPI.DataContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace FootballLeagueAPI.Services
 {
     public class PlayerService : IPlayersService
     {
+        private LeagueContext _leagueContext;
+
+        public PlayerService(LeagueContext leagueContext)
+        {
+            _leagueContext = leagueContext;
+        }
         public void AddPlayer(Player player)
         {
             throw new NotImplementedException();
@@ -18,9 +26,10 @@ namespace FootballLeagueAPI.Services
             throw new NotImplementedException();
         }
 
-        public List<Player> GetAllPlayers()
+        public async Task<Player[]> GetAllPlayersAsync()
         {
-            throw new NotImplementedException();
+            var players = await _leagueContext.Players.ToArrayAsync();
+            return players;
         }
 
         public Player GetPlayerById(int playerId)

@@ -8,7 +8,7 @@ namespace FootballLeagueAPI.Services
 {
     public interface IPlayersService
     {
-        List<Player> GetAllPlayers();
+        Task<Player[]> GetAllPlayersAsync();
 
         void AddPlayer(Player player);
 

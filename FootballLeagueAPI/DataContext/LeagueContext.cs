@@ -17,5 +17,7 @@ namespace FootballLeagueAPI.DataContext
         public DbSet<Team> Team { get; set; }
 
         public DbSet<Player> Players { get; set; }
+
+        public DbSet<Competition> Competitions { get; set; }
     }
 }

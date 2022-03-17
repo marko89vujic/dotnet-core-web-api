@@ -14,5 +14,7 @@ namespace FootballLeagueAPI.Model
         public string Location { get; set; }
 
         public List<Player> Players { get; set; }
+
+        public List<Competition> Competitions { get; set; }
     }
 }

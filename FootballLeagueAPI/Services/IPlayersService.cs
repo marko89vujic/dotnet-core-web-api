@@ -14,6 +14,12 @@ namespace FootballLeagueAPI.Services
 
         void DeletePlayer(Player player);
 
-        Player GetPlayerById(int playerId);
+        Task<Player> GetAsyncPlayerById(int playerId);
+
+        Task<Player> GetAsyncPlayerByName(string name);
+
+        Task<Player[]> SearchByLastNameAsync(string lastName);
+
+        Task<bool> SaveChangesAsync();
     }
 }

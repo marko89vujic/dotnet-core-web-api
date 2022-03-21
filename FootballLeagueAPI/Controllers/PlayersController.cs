@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FootballLeagueAPI.DataContext;
 using FootballLeagueAPI.Model;
 using FootballLeagueAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace FootballLeagueAPI.Controllers
 {
@@ -14,7 +16,7 @@ namespace FootballLeagueAPI.Controllers
     {
         private IPlayersService _playersService;
 
-        public PlayersController(IPlayersService playersService, LeagueContext leagueContext)
+        public PlayersController(IPlayersService playersService)
         {
             _playersService = playersService;
         }
@@ -104,6 +106,7 @@ namespace FootballLeagueAPI.Controllers
         {
             try
             {
+                
                 _playersService.AddPlayer(player);
 
                 if (await _playersService.SaveChangesAsync())
@@ -115,6 +118,72 @@ namespace FootballLeagueAPI.Controllers
                 
             }
             catch(Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure!!");
+            }
+        }
+
+        #endregion
+
+        #region PUT
+
+        [HttpPut("{name}")]
+        public async Task<ActionResult<Player>> Put(string name, Player player)
+        {
+            try
+            {
+                var oldPlayer = await _playersService.GetAsyncPlayerByName(player.Name);
+
+                if (oldPlayer == null)
+                {
+                    return NotFound($"Colud not found player with name {name}");
+                }
+
+                oldPlayer.Name = name;
+
+                if (await _playersService.SaveChangesAsync())
+                {
+                    return oldPlayer;
+                }
+
+                return BadRequest();
+
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure!!");
+            }
+        }
+
+        #endregion
+
+        #region DELETE
+
+        [HttpDelete("{lastName}")]
+        public async Task<IActionResult> Delete(string lastName)
+        {
+            try
+            {
+                var allPlayers = await _playersService.GetAllPlayersAsync();
+
+                var playerForDelete = allPlayers.FirstOrDefault(x => x.LastName == lastName);
+
+                if (playerForDelete == null)
+                {
+                    return NotFound($"Colud not found player with lastname {lastName}");
+                }
+
+                _playersService.DeletePlayer(playerForDelete);
+
+                if (await _playersService.SaveChangesAsync())
+                {
+                    return Ok();
+                }
+
+                return BadRequest();
+
+            }
+            catch (Exception ex)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure!!");
             }

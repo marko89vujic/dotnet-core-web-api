@@ -30,6 +30,7 @@ namespace FootballLeagueAPI
             {
                 options.UseSqlServer(Configuration.GetConnectionString("LeagueWebAPI"));
             });
+            services.AddControllers().AddNewtonsoftJson();
             services.AddScoped<ITeamService, TeamService>();
             services.AddScoped<IPlayersService, PlayerService>();
             services.AddRazorPages();

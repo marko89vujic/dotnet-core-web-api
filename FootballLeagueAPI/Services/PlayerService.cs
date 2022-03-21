@@ -29,7 +29,7 @@ namespace FootballLeagueAPI.Services
 
         public void DeletePlayer(Player player)
         {
-            throw new NotImplementedException();
+            _leagueContext.Players.Remove(player);
         }
 
         public async Task<Player[]> GetAllPlayersAsync()
